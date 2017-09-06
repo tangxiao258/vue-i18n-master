@@ -3,7 +3,7 @@
 2. 基于vue-cli,组织代码
 3. 集成element-ui组件库
 4. 引入vue-i18n,增加模板翻译功能
-5. 
+
 
 # Summary
 1. 使用cookie存储当前选中语言
