@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTC-登录</title>
+    <link rel="stylesheet" href="assets/plugin/elementui/theme-default/index.css">
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <!--<script src="assets/js/load.js"></script>-->
+    <style>
+        body{
+            background-color: #f0f0f0;
+        }
+        .login-wrapper{
+            margin: 6% auto 0;
+            padding: 50px;
+            width: 400px;
+            background-color:#fff;
+            border-radius: 2px;
+        }
+        .logo{
+            text-align: center;
+            height:100px;
+        }
+        .lang-button{
+            width:60px;
+            height:60px;
+            margin-top:20px;
+            border-radius: 50%;
+        }
+        .login-button {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="login-wrapper">
+        <div class="logo">
+            <el-button type="primary" class="lang-button" @click="changeLang">{{lang==='en' ? 'EN' : '中'}}</el-button>
+        </div>
+        <el-form :model="operator" :rules="rules" ref="operator" label-width="80px" label-position="top">
+            <el-form-item prop="username" :label="$t('username.label')" :rules="{required: true, message: $t('username.prompt'), trigger: 'blur'}">
+                <el-input v-model="operator.username" size="large" :placeholder="$t('username.placeholder')"></el-input>
+            </el-form-item>
+            <el-form-item prop="password" :label="$t('password.label')" :rules="{required: true, message: $t('password.prompt'), trigger: 'blur'}">
+                <el-input v-model="operator.password" type="password" size="large" :placeholder="$t('password.placeholder')" v-model="operator.password"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-date-picker type="date" style="width: 100%;"></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+                <el-button size="large" type="primary" class="login-button">{{$t('sign.label')}}</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</div>
+
+<script src="assets/plugin/vue/vue.js"></script>
+<script src="assets/plugin/vue-i18n/vue-i18n.js"></script>   <!--使用CDN方式引入-->
+<script src="assets/plugin/elementui/index.js"></script>     <!--使用CDN方式引入-->
+<script src="assets/plugin/elementui/locale/lang/en.js"></script>
+<script src="assets/plugin/elementui/locale/lang/zh-CN.js"></script>
+<script src="assets/js/localeStorage.js"></script>
+<script src="assets/lang/login/index.js"></script>   <!--设置当前文件所需语言,可以为每个页面单独定制JS文件-->
+<script>
+    //根据localStorage判断当前页面选中语言
+    let lang = getLocalStorage('lang') || 'zh';
+
+    //element-ui设置中/英文
+    if (lang === 'en') {
+        ELEMENT.locale(ELEMENT.lang.en);
+    } else {
+        ELEMENT.locale(ELEMENT.lang.zhCN);
+    }
+
+
+    //获取当前页面所需language
+    const LANG = getLang();
+    const i18n = new VueI18n({
+        locale: lang,
+        messages: {
+            en: LANG.en,
+            zh: LANG.zh
+        }
+    });
+
+    var vm = new Vue({
+        el: "#app",
+        i18n,  //引入i18n
+        data() {
+            return {
+                lang:lang,
+                operator: {
+                    username: "",
+                    password: ""
+                }
+            };
+        },
+        methods: {
+            changeLang() {
+                this.lang==='en' ? this.lang = 'zh' : this.lang = 'en';
+                lang = this.lang;
+                this.$i18n.locale = this.lang;
+                if(this.lang === 'en'){
+                    setLocalStorage('lang','en');
+                    ELEMENT.locale(ELEMENT.lang.en);
+                }else{
+                    setLocalStorage('lang','zh');
+                    ELEMENT.locale(ELEMENT.lang.zhCN);
+                }
+                //window.location.reload();
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTC-登录</title>
+    <link rel="stylesheet" href="../../assets/plugin/elementui/theme-default/index.css">
+    <style>
+        body{
+            padding:0;
+            margin:0;
+        }
+        .logo{
+            float:left;
+            display :inline-block;
+            height: 100%;
+            margin:0 60px 0 40px;
+            font-size: 0;
+        }
+        .logo img{
+            display:inline-block;
+            vertical-align :top;
+            margin-top: 5px;
+        }
+        .title{
+            display:inline-block;
+            vertical-align :top;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 60px;
+        }
+        .language{
+            float:right;
+            margin-right: 40px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 0;
+        }
+        .language span{
+            display:inline-block;
+            font-size: 14px;
+            padding:0 2px;
+            color:#48576a;
+        }
+        .language span.active{
+            color:#20a0ff
+        }
+    </style>
+</head>
+<body>
+<div class="index-wrapper" id="app">
+    <div class="header">
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+            <li class="logo">
+                <img src="../../assets/images/Logo.png" width="50" height="50">
+                <span class="title">{{ $t('title')}}</span>
+            </li>
+            <el-menu-item index="1" >{{$t('navbar[0].component')}}</el-menu-item>
+            <el-menu-item index="2">{{$t('navbar[2].component')}}</el-menu-item>
+            <el-submenu index="3">
+                <template slot="title">{{$t('navbar[1].component')}}</template>
+                <el-menu-item index="3-1">{{$t('navbar[1].children[0].component')}}</el-menu-item>
+                <el-menu-item index="3-2">{{$t('navbar[1].children[1].component')}}</el-menu-item>
+                <el-menu-item index="3-3">{{$t('navbar[1].children[2].component')}}</el-menu-item>
+            </el-submenu>
+            <li class="language">
+                <span  @click="changeLang('zh')" :class="{'active': lang==='zh'}">中</span>
+                <span>/</span>
+                <span @click="changeLang('en')" :class="{'active': lang==='en'}">EN</span>
+            </li>
+        </el-menu>
+    </div>
+</div>
+
+<!--<script src="../../assets/js/until.js"></script>-->
+<!--<script src="../../assets/plugin/vue/vue.js"></script>-->
+<!--<script src="../../assets/plugin/vue-i18n/vue-i18n.js"></script>-->
+<!--<script src="../../assets/plugin/elementui/index.js"></script>-->
+<!--<script src="../../assets/plugin/elementui/locale/lang/en.js"></script>-->
+<!--<script src="../../assets/plugin/elementui/locale/lang/zh-CN.js"></script>-->
+<!--<script src="../../assets/js/localeStorage.js"></script>-->
+<!--<script src="../../assets/lang/index/index.js"></script>-->
+<script>
+    //语言引入
+    let lang = getLocalStorage('lang') || 'en';
+    console.log(lang);
+
+    if (lang === 'en') {
+        ELEMENT.locale(ELEMENT.lang.en);
+    } else {
+        ELEMENT.locale(ELEMENT.lang.zhCN);
+    }
+
+    const LANG = getLang();
+    const i18n = new VueI18n({
+        locale: lang,
+        messages: {
+            en: LANG.en,
+            zh: LANG.zh
+        }
+    });
+
+    var vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                activeIndex: '1',
+                activeIndex2: '1',
+                lang: ''
+            };
+        },
+        i18n,
+        created() {
+            let lang = getLocalStorage('lang');
+            if (lang) {
+                this.lang = lang;
+            } else {
+                this.lang = 'en';
+            }
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            changeLang(value){
+                this.lang==='en' ? this.lang = 'zh' : this.lang = 'en';
+                this.$i18n.locale = this.lang;
+                if(this.lang === 'en'){
+                    setLocalStorage('lang','en');
+                    ELEMENT.locale(ELEMENT.lang.en);
+                }else{
+                    setLocalStorage('lang','zh');
+                    ELEMENT.locale(ELEMENT.lang.zhCN);
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
